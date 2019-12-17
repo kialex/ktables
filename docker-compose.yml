@@ -1,0 +1,44 @@
+version: '3'
+services:
+  phpfpm:
+    image: 'bitnami/php-fpm:7.4-debian-9'
+    networks:
+      - k-tables
+    volumes:
+      - ./:/app
+    ports:
+      - "9090:9000"
+  nginx:
+    image: 'nginx:latest'
+#    links:
+#      - phpfpm
+    depends_on:
+      - phpfpm
+      - db
+    networks:
+      - k-tables
+    ports:
+      - '9080:80'
+      - '9043:443'
+    environment:
+      - NGINX_HOST=kharkovtables.com.ua
+      - NGINX_PORT=80
+    volumes:
+      - ./:/app
+      - ./docker/nginx/web.template:/etc/nginx/conf.d/default.conf
+    #command: /bin/sh -c "envsubst '$NGINX_HOST $NGINX_PORT' < /etc/nginx/conf.d/web.template > /etc/nginx/conf.d/web.conf && exec nginx -g 'daemon off;'"
+  db:
+    image: 'mysql:5.7'
+    restart: always
+    networks:
+      - k-tables
+    ports:
+      - '9006:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=kfnHui43k
+      - MYSQL_DATABASE=ktables
+      - MYSQL_USER=ktables
+      - MYSQL_PASSWORD=!23QweRR
+networks:
+  k-tables:
+    driver: bridge
