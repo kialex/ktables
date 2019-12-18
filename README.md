@@ -1,6 +1,6 @@
 **Just run following commands**
 ~~~~
-# **git** clone https://github.com/kialex/ktables.git
+# git clone https://github.com/kialex/ktables.git
 # cd ktables && ./start.sh
 ~~~~
 
