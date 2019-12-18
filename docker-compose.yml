@@ -2,7 +2,7 @@ version: '3'
 services:
   composer:
     image: composer
-    user: $UID:$GID
+    user: $CURRENT_UID
     stdin_open: true
     tty: true
     volumes:
@@ -11,7 +11,7 @@ services:
       - /etc/passwd:/etc/passwd:ro
       - /etc/shadow:/etc/shadow:ro
     working_dir: /app
-    command: /bin/sh -c "composer install --ignore-platform-reqs"
+    command: install
   phpfpm:
     image: 'bitnami/php-fpm:7.4-debian-9'
     networks:
