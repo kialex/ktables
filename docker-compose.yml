@@ -2,8 +2,14 @@ version: '3'
 services:
   composer:
     image: composer
+    user: $UID:$GID
+    stdin_open: true
+    tty: true
     volumes:
       - .//:/app
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/shadow:/etc/shadow:ro
     working_dir: /app
     command: /bin/sh -c "composer install --ignore-platform-reqs"
   phpfpm:
