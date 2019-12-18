@@ -1,7 +1,13 @@
 version: '3'
 services:
+  composer:
+    image: composer
+    volumes:
+      - .//:/app
+    working_dir: /app
+    command: /bin/sh -c "composer install --ignore-platform-reqs"
   phpfpm:
-    build: ./docker/phpfpm
+    image: 'bitnami/php-fpm:7.4-debian-9'
     networks:
       - k-tables
     volumes:
@@ -9,11 +15,8 @@ services:
     ports:
       - "9090:9000"
     working_dir: /app
-    command: /bin/sh -c "composer install --ignore-platform-reqs --prefer-dist"
   nginx:
     image: 'nginx:latest'
-#    links:
-#      - phpfpm
     depends_on:
       - phpfpm
       - db
