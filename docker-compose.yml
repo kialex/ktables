@@ -1,13 +1,15 @@
 version: '3'
 services:
   phpfpm:
-    image: 'bitnami/php-fpm:7.4-debian-9'
+    build: ./docker/phpfpm
     networks:
       - k-tables
     volumes:
       - ./:/app
     ports:
       - "9090:9000"
+    working_dir: /app
+    command: /bin/sh -c "composer install --ignore-platform-reqs --prefer-dist"
   nginx:
     image: 'nginx:latest'
 #    links:
