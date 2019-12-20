@@ -1,3 +1,6 @@
-login:
-  path: /authentication_token
+admin-login:
+  path: /admin-login
+  methods: ['POST']
+customer-login:
+  path: /customer-login
   methods: ['POST']

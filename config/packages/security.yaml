@@ -1,25 +1,47 @@
 security:
     encoders:
-        App\Entity\User:
+        App\Entity\Customer:
             algorithm: auto
+        App\Entity\Admin:
+            algorithm: auto
+
+
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        app_customer_provider:
             entity:
-                class: App\Entity\User
+                class: App\Entity\Customer
+                property: email
+        # used to reload user from session & other features (e.g. switch_user)
+        app_admin_provider:
+            entity:
+                class: App\Entity\Admin
                 property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        admin:
             stateless: true
             anonymous: true
-            provider: app_user_provider
+            provider: app_admin_provider
             json_login:
-                check_path: /authentication_token
+                check_path: /admin-login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+        customer:
+            stateless: true
+            anonymous: true
+            provider: app_customer_provider
+            json_login:
+                check_path: /customer-login
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -28,5 +50,5 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/admins/*, roles: ROLE_SUPER_ADMIN }
+         - { path: ^/customers/*, roles: [ROLE_SUPER_ADMIN, ROLE_CUSTOMER] }
