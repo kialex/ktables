@@ -1,0 +1,14 @@
+resources:
+  App\Entity\Admin:
+    properties:
+      name:
+        attributes:
+          swagger_context:
+            type: string
+            enum: ['one', 'two']
+            example: one
+      timestamp:
+        attributes:
+          swagger_context:
+            type: string
+            format: date-time
