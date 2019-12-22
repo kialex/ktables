@@ -4,48 +4,42 @@ security:
             algorithm: auto
         App\Entity\Admin:
             algorithm: auto
-
-
-
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        app_customer_provider:
-            entity:
-                class: App\Entity\Customer
-                property: email
-        # used to reload user from session & other features (e.g. switch_user)
-        app_admin_provider:
-            entity:
-                class: App\Entity\Admin
-                property: email
+        jwt_provider:
+            id: App\Security\JwtPayloadUserProvider
+        admin_provider:
+            entity: { class: App\Entity\Admin, property: email }
+        customer_provider:
+            entity: { class: App\Entity\Customer, property: email }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        admin:
-            stateless: true
+        admin-login:
+            pattern: ^/admin-login
             anonymous: true
-            provider: app_admin_provider
+            provider: admin_provider
             json_login:
                 check_path: /admin-login
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-        customer:
-            stateless: true
+        customer-login:
+            pattern: ^/customer-login
             anonymous: true
-            provider: app_customer_provider
+            provider: customer_provider
             json_login:
                 check_path: /customer-login
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        main:
+            pattern: ^
+            stateless: true
+            anonymous: true
+            provider: jwt_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator

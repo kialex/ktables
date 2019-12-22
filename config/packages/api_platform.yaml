@@ -5,10 +5,3 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-        api_keys:
-            apiKeyAdmin:
-                name: Authorization Admin
-                type: header
-            apiKeyCustomer:
-                name: Authorization Customer
-                type: header
