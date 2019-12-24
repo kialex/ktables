@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdminRepository")
@@ -20,8 +20,21 @@ class Admin implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     *
+     * @Assert\NotNull()
+     * @Assert\Email()
      */
     private $email;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $lastName;
 
     /**
      * @ORM\Column(type="json")
@@ -30,25 +43,74 @@ class Admin implements UserInterface
 
     /**
      * @var string The hashed password
+     *
      * @ORM\Column(type="string")
+     *
+     * @Assert\NotNull()
      */
     private $password;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return Admin
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
+    }
+
+    /**
+     * @param string $firstName
+     * @return Admin
+     */
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstName() :?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return Admin
+     */
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastName() :?string
+    {
+        return $this->lastName;
     }
 
     /**
@@ -73,6 +135,10 @@ class Admin implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     * @return Admin
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -88,6 +154,10 @@ class Admin implements UserInterface
         return (string) $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return Admin
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
