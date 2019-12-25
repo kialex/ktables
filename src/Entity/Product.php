@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +26,12 @@ class Product
      * @ORM\Column(type="string", unique=true)
      */
     private $title;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", unique=true)
+     */
+    private $sku;
 
     /**
      * @var float
@@ -56,6 +64,51 @@ class Product
     private $created_at;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="products")
+     */
+    private $categories;
+
+    /**
+     * Product constructor.
+     */
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param Category $category
+     * @return Product
+     */
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+        return $this;
+    }
+
+    /**
+     * @param Category $category
+     * @return Product
+     */
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+        }
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getCreatedAt(): string
@@ -64,10 +117,10 @@ class Product
     }
 
     /**
-     * @param string $created_at
+     * @param \DateTimeInterface $created_at
      * @return Product
      */
-    public function setCreatedAt(string $created_at): Product
+    public function setCreatedAt(\DateTimeInterface $created_at): Product
     {
         $this->created_at = $created_at;
         return $this;
@@ -79,6 +132,24 @@ class Product
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSku(): string
+    {
+        return $this->sku;
+    }
+
+    /**
+     * @param string $sku
+     * @return Product
+     */
+    public function setSku(string $sku): Product
+    {
+        $this->sku = $sku;
+        return $this;
     }
 
     /**
