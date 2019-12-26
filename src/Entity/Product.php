@@ -29,7 +29,7 @@ class Product
 
     /**
      * @var string
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      */
     private $sku;
 
@@ -50,6 +50,12 @@ class Product
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", options={"default":1})
+     */
+    private $in_stock;
 
     /**
      * @var bool
@@ -230,6 +236,24 @@ class Product
     public function isIsActive(): bool
     {
         return $this->is_active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInStock(): bool
+    {
+        return $this->in_stock;
+    }
+
+    /**
+     * @param bool $in_stock
+     * @return Product
+     */
+    public function setInStock(bool $in_stock): Product
+    {
+        $this->in_stock = $in_stock;
+        return $this;
     }
 
     /**
